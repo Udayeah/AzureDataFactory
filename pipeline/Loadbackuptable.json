@@ -50,13 +50,16 @@
 			}
 		],
 		"parameters": {
-			"Table": {
+			"sTable": {
 				"type": "string"
 			},
 			"sch": {
 				"type": "string"
 			},
 			"DBN": {
+				"type": "string"
+			},
+			"Dtable": {
 				"type": "string"
 			}
 		},
