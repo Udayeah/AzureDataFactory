@@ -1,0 +1,28 @@
+{
+	"name": "azSQLServer",
+	"properties": {
+		"parameters": {
+			"DBname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "udayss.database.windows.net",
+			"database": "@{linkedService().DBname}",
+			"encrypt": "mandatory",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "adminuser",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "azkv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "PasswordforSS"
+			}
+		}
+	}
+}
