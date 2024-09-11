@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-us-0909"
+		},
+		"azblobstorage_connectionString": {
+			"value": "DefaultEndpointsProtocol=https;AccountName=@{linkedService().blobName};EndpointSuffix=core.windows.net;"
+		},
+		"azSQLServer_properties_typeProperties_server": {
+			"value": "udayss.database.windows.net"
+		},
+		"azSQLServer_properties_typeProperties_database": {
+			"value": "@{linkedService().DBname}"
+		},
+		"azSQLServer_properties_typeProperties_userName": {
+			"value": "adminuser"
+		},
+		"azkv_properties_typeProperties_baseUrl": {
+			"value": "https://kvpavi.vault.azure.net"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

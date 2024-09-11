@@ -1,0 +1,111 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-us-0909"
+		},
+		"azblobstorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'azblobstorage'",
+			"defaultValue": "DefaultEndpointsProtocol=https;AccountName=@{linkedService().blobName};EndpointSuffix=core.windows.net;"
+		},
+		"azkv_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kvpavi.vault.azure.net"
+		},
+		"azSQLServer_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "udayss.database.windows.net"
+		},
+		"azSQLServer_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().DBname}"
+		},
+		"azSQLServer_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adminuser"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/azkv')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('azkv_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azSQLServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DBname": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('azSQLServer_properties_typeProperties_server')]",
+					"database": "[parameters('azSQLServer_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('azSQLServer_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "azkv",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "PasswordforSS"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azkv')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/azblobstorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"blobName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('azblobstorage_connectionString')]",
+					"accountKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "azkv",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "keyforblob"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azkv')]"
+			]
+		}
+	]
+}
