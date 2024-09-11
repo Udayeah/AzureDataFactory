@@ -38,13 +38,41 @@
 				"inputs": [
 					{
 						"referenceName": "datasetfromSS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"srctbl": {
+								"value": "@pipeline().parameters.sTable",
+								"type": "Expression"
+							},
+							"DBserver": {
+								"value": "@pipeline().parameters.DBN",
+								"type": "Expression"
+							},
+							"schema": {
+								"value": "@pipeline().parameters.srcsch",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "datasetfromSS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"srctbl": {
+								"value": "@pipeline().parameters.Dtable",
+								"type": "Expression"
+							},
+							"DBserver": {
+								"value": "@pipeline().parameters.DBN",
+								"type": "Expression"
+							},
+							"schema": {
+								"value": "@pipeline().parameters.Dsch",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
