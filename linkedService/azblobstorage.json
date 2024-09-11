@@ -1,0 +1,23 @@
+{
+	"name": "azblobstorage",
+	"properties": {
+		"parameters": {
+			"blobName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": "DefaultEndpointsProtocol=https;AccountName=@{linkedService().blobName};EndpointSuffix=core.windows.net;",
+			"accountKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "azkv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "keyforblob"
+			}
+		}
+	}
+}
