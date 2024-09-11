@@ -51,16 +51,24 @@
 		],
 		"parameters": {
 			"sTable": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ProductModel"
 			},
-			"sch": {
-				"type": "string"
+			"srcsch": {
+				"type": "string",
+				"defaultValue": "SalesLT"
 			},
 			"DBN": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "udayDBSQLserver"
 			},
 			"Dtable": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "ProductModel_bk"
+			},
+			"Dsch": {
+				"type": "string",
+				"defaultValue": "dbo"
 			}
 		},
 		"annotations": []
