@@ -1,0 +1,33 @@
+{
+	"name": "datasetfromSS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azSQLServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DBname": {
+					"value": "@dataset().DBserver",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"srctbl": {
+				"type": "string"
+			},
+			"DBserver": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().srctbl",
+				"type": "Expression"
+			}
+		}
+	}
+}
