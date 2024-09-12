@@ -52,7 +52,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"blobfromDS": "sapavi",
-							"folderfromDS": "Archive"
+							"folderfromDS": "Archive\\Documents"
 						}
 					}
 				]
