@@ -90,7 +90,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@contains(item().name,'.png')",
+									"value": "@contains(variables('curiteration'),'.png')",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
@@ -133,12 +133,24 @@
 							"name": "Get and store Current Iteration value",
 							"type": "AppendVariable",
 							"dependsOn": [],
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "curiteration",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
 			}
 		],
+		"variables": {
+			"curiteration": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
