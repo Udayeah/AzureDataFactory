@@ -1,0 +1,35 @@
+{
+	"name": "dsfordest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azblobstorage",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"blobName": {
+					"value": "@dataset().blobfromDS",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"blobfromDS": {
+				"type": "string"
+			},
+			"folderfromDS": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().folderfromDS",
+					"type": "Expression"
+				},
+				"container": "containerfortest"
+			}
+		}
+	}
+}
