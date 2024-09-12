@@ -38,7 +38,7 @@
 						"referenceName": "dsBinary",
 						"type": "DatasetReference",
 						"parameters": {
-							"filefromDS": "Image.png",
+							"filefromDS": "Image",
 							"blobnamefromDS": "sapavi",
 							"folderfromDS": "DailyFile"
 						}
