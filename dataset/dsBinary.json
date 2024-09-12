@@ -20,6 +20,9 @@
 			},
 			"folderfromDS": {
 				"type": "string"
+			},
+			"container": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -35,7 +38,10 @@
 					"value": "@dataset().folderfromDS",
 					"type": "Expression"
 				},
-				"container": "containerfortest"
+				"container": {
+					"value": "@dataset().container",
+					"type": "Expression"
+				}
 			}
 		}
 	}
