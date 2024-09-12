@@ -79,7 +79,14 @@
 						{
 							"name": "If Condition1",
 							"type": "IfCondition",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Get and store Current Iteration value",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
@@ -123,7 +130,7 @@
 							}
 						},
 						{
-							"name": "Append variable1",
+							"name": "Get and store Current Iteration value",
 							"type": "AppendVariable",
 							"dependsOn": [],
 							"userProperties": []
