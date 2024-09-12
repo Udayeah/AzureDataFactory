@@ -80,11 +80,17 @@
 						{
 							"name": "If Condition1",
 							"type": "IfCondition",
-							"dependsOn": [],
-							"userProperties": [],
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"typeProperties": {
 								"expression": {
-									"value": "@contains( item().name,'png')",
+									"value": "@contains(variables('curiteration'),'png')",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -206,6 +212,23 @@
 									}
 								]
 							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "curiteration",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -213,7 +236,7 @@
 		],
 		"variables": {
 			"curiteration": {
-				"type": "Array"
+				"type": "String"
 			}
 		},
 		"annotations": []
