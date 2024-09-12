@@ -17,6 +17,9 @@
 			},
 			"blobnamefromDS": {
 				"type": "string"
+			},
+			"folderfromDS": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -28,7 +31,10 @@
 					"value": "@dataset().filefromDS",
 					"type": "Expression"
 				},
-				"folderPath": "Dailyfile",
+				"folderPath": {
+					"value": "@dataset().folderfromDS",
+					"type": "Expression"
+				},
 				"container": "containerfortest"
 			}
 		}
