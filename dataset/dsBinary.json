@@ -1,0 +1,36 @@
+{
+	"name": "dsBinary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azblobstorage",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"blobName": {
+					"value": "@dataset().blobnamefromDS",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"filefromDS": {
+				"type": "string"
+			},
+			"blobnamefromDS": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().filefromDS",
+					"type": "Expression"
+				},
+				"folderPath": "Dailyfile",
+				"container": "containerfortest"
+			}
+		}
+	}
+}
