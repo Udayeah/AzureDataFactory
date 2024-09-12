@@ -117,12 +117,37 @@
 													"type": "BinaryReadSettings"
 												}
 											},
+											"sink": {
+												"type": "BinarySink",
+												"storeSettings": {
+													"type": "AzureBlobStorageWriteSettings"
+												}
+											},
 											"enableStaging": false
 										},
 										"inputs": [
 											{
 												"referenceName": "dsBinary",
-												"type": "DatasetReference"
+												"type": "DatasetReference",
+												"parameters": {
+													"filefromDS": {
+														"value": "@variables('curiteration')",
+														"type": "Expression"
+													},
+													"blobnamefromDS": "sapavi",
+													"folderfromDS": "Dailyfile",
+													"container": "containerfortest"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dsfordest",
+												"type": "DatasetReference",
+												"parameters": {
+													"blobfromDS": "sapavi",
+													"folderfromDS": "Screenshot"
+												}
 											}
 										]
 									}
