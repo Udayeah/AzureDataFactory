@@ -1,5 +1,5 @@
 {
-	"name": "Loadbackuptable",
+	"name": "DBLoadbackuptable",
 	"properties": {
 		"activities": [
 			{
