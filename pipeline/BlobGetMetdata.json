@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
+				"name": "Get details about folder",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -32,6 +32,29 @@
 					},
 					"formatSettings": {
 						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Filter out only file type",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get details about folder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().type,'File')",
+						"type": "Expression"
 					}
 				}
 			}
