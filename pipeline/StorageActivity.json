@@ -19,7 +19,8 @@
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
-							"recursive": true
+							"recursive": true,
+							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
@@ -38,9 +39,10 @@
 						"referenceName": "dsBinary",
 						"type": "DatasetReference",
 						"parameters": {
-							"filefromDS": "Image",
+							"filefromDS": "Image.png",
 							"blobnamefromDS": "sapavi",
-							"folderfromDS": "DailyFile"
+							"folderfromDS": "Dailyfile",
+							"container": "containerfortest"
 						}
 					}
 				],
