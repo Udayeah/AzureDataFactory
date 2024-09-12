@@ -34,6 +34,283 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DBLoadbackuptable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "@{pipeline().parameters.srcsch}.@{pipeline().parameters.sTable}"
+							},
+							{
+								"name": "Destination",
+								"value": "@{pipeline().parameters.Dsch}.@{pipeline().parameters.Dtable}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ProductModelID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "ProductModelID",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "datasetfromSS",
+								"type": "DatasetReference",
+								"parameters": {
+									"srctbl": {
+										"value": "@pipeline().parameters.sTable",
+										"type": "Expression"
+									},
+									"DBserver": {
+										"value": "@pipeline().parameters.DBN",
+										"type": "Expression"
+									},
+									"schema": {
+										"value": "@pipeline().parameters.srcsch",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "datasetfromSS",
+								"type": "DatasetReference",
+								"parameters": {
+									"srctbl": {
+										"value": "@pipeline().parameters.Dtable",
+										"type": "Expression"
+									},
+									"DBserver": {
+										"value": "@pipeline().parameters.DBN",
+										"type": "Expression"
+									},
+									"schema": {
+										"value": "@pipeline().parameters.Dsch",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"sTable": {
+						"type": "string",
+						"defaultValue": "ProductModel"
+					},
+					"srcsch": {
+						"type": "string",
+						"defaultValue": "SalesLT"
+					},
+					"DBN": {
+						"type": "string",
+						"defaultValue": "udayDBSQLserver"
+					},
+					"Dtable": {
+						"type": "string",
+						"defaultValue": "ProductModel_bk"
+					},
+					"Dsch": {
+						"type": "string",
+						"defaultValue": "dbo"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/datasetfromSS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetfromSS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azSQLServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBname": {
+							"value": "@dataset().DBserver",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"srctbl": {
+						"type": "string"
+					},
+					"DBserver": {
+						"type": "string"
+					},
+					"schema": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Color",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StandardCost",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "ListPrice",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Weight",
+						"type": "decimal",
+						"precision": 8,
+						"scale": 2
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ProductModelID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SellStartDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "SellEndDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DiscontinuedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ThumbNailPhoto",
+						"type": "varbinary"
+					},
+					{
+						"name": "ThumbnailPhotoFileName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "rowguid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().srctbl",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azSQLServer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/azSQLServer')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -106,6 +383,220 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StorageActivity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dsBinary",
+								"type": "DatasetReference",
+								"parameters": {
+									"filefromDS": "Image.png",
+									"blobnamefromDS": "sapavi",
+									"folderfromDS": "Dailyfile",
+									"container": "containerfortest"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dsfordest",
+								"type": "DatasetReference",
+								"parameters": {
+									"blobfromDS": "sapavi",
+									"folderfromDS": "Archive"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsBinary')]",
+				"[concat(variables('factoryId'), '/datasets/dsfordest')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dsBinary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azblobstorage",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"blobName": {
+							"value": "@dataset().blobnamefromDS",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"filefromDS": {
+						"type": "string"
+					},
+					"blobnamefromDS": {
+						"type": "string"
+					},
+					"folderfromDS": {
+						"type": "string"
+					},
+					"container": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filefromDS",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().folderfromDS",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azblobstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dsfordest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azblobstorage",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"blobName": {
+							"value": "@dataset().blobfromDS",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"blobfromDS": {
+						"type": "string"
+					},
+					"folderfromDS": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().folderfromDS",
+							"type": "Expression"
+						},
+						"container": "containerfortest"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azblobstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobGetMetdata')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dsfordest",
+								"type": "DatasetReference",
+								"parameters": {
+									"blobfromDS": "sapavi",
+									"folderfromDS": "Dailyfile"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsfordest')]"
+			]
 		}
 	]
 }
