@@ -331,6 +331,293 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dsdelimited')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "azblobstorage",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"blobName": "sapavi"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Sample-Spreadsheet-10-rows.csv",
+						"folderPath": "Dailyfile",
+						"container": "containerfortest"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/azblobstorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobGetMetdata')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get details about folder",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dsfordest",
+								"type": "DatasetReference",
+								"parameters": {
+									"blobfromDS": "sapavi",
+									"folderfromDS": "Dailyfile"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter out only file type",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get details about folder",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get details about folder').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@contains(item().type,'File')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Process each file one by one",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter out only file type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter out only file type').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Set variable1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@contains(variables('curiteration'),'png')",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Move all other than Image",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "BinarySource",
+														"storeSettings": {
+															"type": "AzureBlobStorageReadSettings",
+															"recursive": true
+														},
+														"formatSettings": {
+															"type": "BinaryReadSettings"
+														}
+													},
+													"sink": {
+														"type": "BinarySink",
+														"storeSettings": {
+															"type": "AzureBlobStorageWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "dsBinary",
+														"type": "DatasetReference",
+														"parameters": {
+															"filefromDS": {
+																"value": "@variables('curiteration')",
+																"type": "Expression"
+															},
+															"blobnamefromDS": "sapavi",
+															"folderfromDS": "Dailyfile",
+															"container": "containerfortest"
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dsfordest",
+														"type": "DatasetReference",
+														"parameters": {
+															"blobfromDS": "sapavi",
+															"folderfromDS": "Archive\\Documents"
+														}
+													}
+												]
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Move Image alone",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "BinarySource",
+														"storeSettings": {
+															"type": "AzureBlobStorageReadSettings",
+															"recursive": true
+														},
+														"formatSettings": {
+															"type": "BinaryReadSettings"
+														}
+													},
+													"sink": {
+														"type": "BinarySink",
+														"storeSettings": {
+															"type": "AzureBlobStorageWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "dsBinary",
+														"type": "DatasetReference",
+														"parameters": {
+															"filefromDS": {
+																"value": "@variables('curiteration')",
+																"type": "Expression"
+															},
+															"blobnamefromDS": "sapavi",
+															"folderfromDS": "Dailyfile",
+															"container": "containerfortest"
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dsfordest",
+														"type": "DatasetReference",
+														"parameters": {
+															"blobfromDS": "sapavi",
+															"folderfromDS": "Archive\\Screenshot"
+														}
+													}
+												]
+											}
+										]
+									}
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "curiteration",
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"curiteration": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsfordest')]",
+				"[concat(variables('factoryId'), '/datasets/dsBinary')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DBLoadbackuptable')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -547,262 +834,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dsBinary')]",
 				"[concat(variables('factoryId'), '/datasets/dsfordest')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BlobGetMetdata')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get details about folder",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dsfordest",
-								"type": "DatasetReference",
-								"parameters": {
-									"blobfromDS": "sapavi",
-									"folderfromDS": "Dailyfile"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Filter out only file type",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get details about folder",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get details about folder').output.childItems",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@contains(item().type,'File')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Process each file one by one",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter out only file type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter out only file type').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "If Condition1",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Set variable1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [
-										{}
-									],
-									"typeProperties": {
-										"expression": {
-											"value": "@contains(variables('curiteration'),'png')",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Move all other than Image",
-												"type": "Copy",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "BinarySource",
-														"storeSettings": {
-															"type": "AzureBlobStorageReadSettings",
-															"recursive": true
-														},
-														"formatSettings": {
-															"type": "BinaryReadSettings"
-														}
-													},
-													"sink": {
-														"type": "BinarySink",
-														"storeSettings": {
-															"type": "AzureBlobStorageWriteSettings"
-														}
-													},
-													"enableStaging": false
-												},
-												"inputs": [
-													{
-														"referenceName": "dsBinary",
-														"type": "DatasetReference",
-														"parameters": {
-															"filefromDS": {
-																"value": "@variables('curiteration')",
-																"type": "Expression"
-															},
-															"blobnamefromDS": "sapavi",
-															"folderfromDS": "Dailyfile",
-															"container": "containerfortest"
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "dsfordest",
-														"type": "DatasetReference",
-														"parameters": {
-															"blobfromDS": "sapavi",
-															"folderfromDS": "Archive\\Documents"
-														}
-													}
-												]
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "Move Image alone",
-												"type": "Copy",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "BinarySource",
-														"storeSettings": {
-															"type": "AzureBlobStorageReadSettings",
-															"recursive": true
-														},
-														"formatSettings": {
-															"type": "BinaryReadSettings"
-														}
-													},
-													"sink": {
-														"type": "BinarySink",
-														"storeSettings": {
-															"type": "AzureBlobStorageWriteSettings"
-														}
-													},
-													"enableStaging": false
-												},
-												"inputs": [
-													{
-														"referenceName": "dsBinary",
-														"type": "DatasetReference",
-														"parameters": {
-															"filefromDS": {
-																"value": "@variables('curiteration')",
-																"type": "Expression"
-															},
-															"blobnamefromDS": "sapavi",
-															"folderfromDS": "Dailyfile",
-															"container": "containerfortest"
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "dsfordest",
-														"type": "DatasetReference",
-														"parameters": {
-															"blobfromDS": "sapavi",
-															"folderfromDS": "Archive\\Screenshot"
-														}
-													}
-												]
-											}
-										]
-									}
-								},
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "curiteration",
-										"value": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"curiteration": {
-						"type": "String"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsfordest')]",
-				"[concat(variables('factoryId'), '/datasets/dsBinary')]"
 			]
 		}
 	]
