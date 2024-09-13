@@ -1,0 +1,15 @@
+{
+	"name": "SQLServer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azSQLServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DBname": "udayDBSQLserver"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
