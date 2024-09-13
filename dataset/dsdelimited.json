@@ -1,0 +1,27 @@
+{
+	"name": "dsdelimited",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azblobstorage",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"blobName": "sapavi"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Sample-Spreadsheet-10-rows.csv",
+				"folderPath": "Dailyfile",
+				"container": "containerfortest"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
