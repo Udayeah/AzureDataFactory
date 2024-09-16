@@ -20,7 +20,7 @@
 					},
 					"name": "sink1",
 					"rejectedDataLinkedService": {
-						"referenceName": "azblobstorage",
+						"referenceName": "linkedService1",
 						"type": "LinkedServiceReference"
 					}
 				}
@@ -58,25 +58,6 @@
 				"     partitionFileNames:[($finalfn)],",
 				"     truncate: true,",
 				"     quoteAll: true,",
-				"     mapColumn(",
-				"          ProductID,",
-				"          Name,",
-				"          ProductNumber,",
-				"          Color,",
-				"          StandardCost,",
-				"          ListPrice,",
-				"          Size,",
-				"          Weight,",
-				"          ProductCategoryID,",
-				"          ProductModelID,",
-				"          SellStartDate,",
-				"          SellEndDate,",
-				"          DiscontinuedDate,",
-				"          ThumbNailPhoto,",
-				"          ThumbnailPhotoFileName,",
-				"          rowguid,",
-				"          ModifiedDate",
-				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
