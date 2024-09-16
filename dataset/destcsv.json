@@ -1,0 +1,35 @@
+{
+	"name": "destcsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azblobstorage",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"blobName": "sapavi"
+			}
+		},
+		"parameters": {
+			"Finalfilename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().Finalfilename",
+					"type": "Expression"
+				},
+				"folderPath": "Dailyfile/DummyFolder",
+				"container": "containerfortest"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
