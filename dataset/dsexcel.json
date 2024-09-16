@@ -1,0 +1,25 @@
+{
+	"name": "dsexcel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azblobstorage",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"blobName": "sapavi"
+			}
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "FSI-2023-DOWNLOAD.xlsx",
+				"folderPath": "Dailyfile",
+				"container": "containerfortest"
+			},
+			"sheetIndex": 0,
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
