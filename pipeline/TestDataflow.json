@@ -18,6 +18,12 @@
 					"dataflow": {
 						"referenceName": "dataflow4",
 						"type": "DataFlowReference",
+						"parameters": {
+							"df-parameter": {
+								"value": "'@{dummyname.csv}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"source1": {
 								"srctbl": "TestLoad",
