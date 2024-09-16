@@ -55,7 +55,6 @@
 				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     quoteAll: true,",
 				"     mapColumn(",
 				"          ProductID,",
 				"          Name,",
