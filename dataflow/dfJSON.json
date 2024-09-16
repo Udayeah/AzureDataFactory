@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "destcsv",
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -27,6 +27,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     parameter1 as string",
+				"}",
 				"source(output(",
 				"          id as string,",
 				"          type as string,",
@@ -52,6 +55,7 @@
 				"     skipDuplicateMapOutputs: false) ~> flatten1",
 				"flatten1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:[($parameter1)],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
@@ -59,8 +63,9 @@
 				"          type,",
 				"          name,",
 				"          ppu,",
-				"          type = topping.type",
-				"     )) ~> sink1"
+				"          new = topping.type",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
