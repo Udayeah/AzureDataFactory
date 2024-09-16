@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Sample-Spreadsheet-10-rows.csv",
+				"fileName": "sales_data_sample.csv",
 				"folderPath": "Dailyfile",
 				"container": "containerfortest"
 			},
