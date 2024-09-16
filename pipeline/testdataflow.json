@@ -25,6 +25,11 @@
 							}
 						},
 						"datasetParameters": {
+							"source1": {
+								"srctbl": "testload",
+								"DBserver": "udayDBSQLserver",
+								"schema": "dbo"
+							},
 							"sink1": {
 								"Finalfilename": "trew"
 							}
