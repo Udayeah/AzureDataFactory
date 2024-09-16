@@ -985,10 +985,15 @@
 						"     format: 'table') ~> source1",
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     partitionFileNames:[($finalfn)],",
+						"     partitionFileNames:[(\"'$finalfn'\")],",
 						"     truncate: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
+						"     quoteAll: true,",
+						"     mapColumn(",
+						"          ProductID,",
+						"          ModifiedDate",
+						"     ),",
 						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
@@ -1022,7 +1027,7 @@
 								"type": "DataFlowReference",
 								"parameters": {
 									"finalfn": {
-										"value": "'@{samplecs.csv}'",
+										"value": "'@{sample.csv}'",
 										"type": "Expression"
 									}
 								},
