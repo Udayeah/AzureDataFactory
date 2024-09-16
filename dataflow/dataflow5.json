@@ -49,7 +49,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"source1 sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     partitionFileNames:[(\"'$finalfn'\")],",
 				"     truncate: true,",
