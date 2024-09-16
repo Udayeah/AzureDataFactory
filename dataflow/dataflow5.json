@@ -18,7 +18,11 @@
 						"referenceName": "destcsv",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "azblobstorage",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [],
@@ -53,8 +57,7 @@
 				"     validateSchema: false,",
 				"     partitionFileNames:[($finalfn)],",
 				"     truncate: true,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
+				"     quoteAll: true,",
 				"     mapColumn(",
 				"          ProductID,",
 				"          Name,",
