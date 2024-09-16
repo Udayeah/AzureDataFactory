@@ -42,7 +42,7 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     documentForm: 'singleDocument') ~> source1",
-				"source1 foldDown(unroll(topping),",
+				"source1 foldDown(unrollMultiple(topping,topping),",
 				"     mapColumn(",
 				"          id,",
 				"          type,",
@@ -63,7 +63,8 @@
 				"          type,",
 				"          name,",
 				"          ppu,",
-				"          new = topping.type",
+				"          new = topping.type,",
+				"          newid = topping.id",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
