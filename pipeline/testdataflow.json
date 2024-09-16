@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"finalfn": {
-								"value": "'@{sample.csv}'",
+								"value": "'@{'Sample.csv'}'",
 								"type": "Expression"
 							}
 						},
