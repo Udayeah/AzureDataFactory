@@ -71,6 +71,14 @@
 					"items": {
 						"type": "integer"
 					}
+				},
+				"bats": {
+					"type": "object",
+					"properties": {
+						"Name": {
+							"type": "string"
+						}
+					}
 				}
 			}
 		}
